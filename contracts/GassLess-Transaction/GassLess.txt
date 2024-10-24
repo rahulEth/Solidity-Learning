@@ -1,0 +1,12 @@
+Gasless token transfers on Ethereum allow users to send 
+tokens without directly paying gas fees in ETH. Instead, 
+gas fees are typically paid by a relayer or covered through 
+other mechanisms like sponsorship or meta-transactions. 
+This is particularly useful for improving user experience, 
+especially for new users who might not hold ETH but want to interact with dApps.
+
+ EIP-2612 allow token holders to approve transfers by singing a message off-chain, which a relayer can 
+ then submit to the blokchain , saving the user paying from gas fees. 
+
+
+https://eips.ethereum.org/EIPS/eip-2612
