@@ -1,5 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
+/* Graph of inheritance
+    A
+   / \
+  B   C
+ / \ /
+F  D,E
+
+*/
+// NOTE: By using the keyword super, all of the immediate parent contracts will be called.
+
 
 contract A {
     function foo() public pure virtual returns (string memory){
@@ -34,7 +44,7 @@ contract D is B, C{
 }
 
 contract E is C, B{
-        // D.foo() returns "B"
+        // E.foo() returns "B"
     // since B is the right most parent contract with function foo()
     function foo() public pure override(B, C) returns (string memory){
         return super.foo();
