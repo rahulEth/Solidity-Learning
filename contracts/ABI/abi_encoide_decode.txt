@@ -1,0 +1,78 @@
+ABI encoding/decoding is an essential processes for communication bitween smart contracts or 
+smart contract and external system.    
+ABI defines how data strcutres(function arguments) and function  are encoded for
+interaction b/w contracts. it convert functions and args into raw data so that EVM can
+understand. 
+
+Types of Encoding:
+
+abi.encode: Encodes data in the “standard” way, with padding, for use in function arguments.
+pragma solidity ^0.8.0;
+
+contract AbiEncodeExample {
+    // Function to encode two arguments (uint256 and address) with `abi.encode`
+    function encodeData(uint256 num, address addr) public pure returns (bytes memory) {
+        // Encodes the data with padding
+        return abi.encode(num, addr);
+    }
+}
+
+
+abi.encodePacked: Encodes data in a packed format, saving space by removing padding, often used in hashing.
+
+Usage: Encodes data in a compact format (without padding). Often used for hashing, where saving space is essential.
+
+pragma solidity ^0.8.0;
+
+contract AbiEncodePackedExample {
+    // Function to encode two arguments (uint256 and address) with `abi.encodePacked`
+    function encodePackedData(uint256 num, address addr) public pure returns (bytes memory) {
+        // Encodes the data without padding (compact format)
+        return abi.encodePacked(num, addr);
+    }
+
+    // Function to hash encoded data (often used in verification and signatures)
+    function hashPackedData(uint256 num, address addr) public pure returns (bytes32) {
+        // Hashing compact encoded data with keccak256
+        return keccak256(abi.encodePacked(num, addr));
+    }
+}
+
+abi.encodeWithSelector: Encodes data with a specific function selector, helpful for making low-level calls.
+
+Usage: Encodes data with a specific function selector, useful for low-level function calls.
+
+contract AbiEncodeWithFunctionSelector{
+    // Defining a selector for an example function
+    bytes4 private constant SELECTOR = bytes4(keccak256("exampleFunction(uint256,adderess)"));
+
+    function encodeWithSelector(uint256 num, address addr) public returns (bytes memory){
+         // Encodes the selector and arguments for low-level call
+        return abi.encodeWithSelector(SELECTOR, num, addr);
+    }
+
+}
+
+
+ABI Decoding
+Purpose: ABI decoding is the process of converting binary data back into readable Solidity types.
+It’s mainly used to interpret the output returned by contract 
+functions or to read data stored in a packed format.
+
+Usage: Solidity provides abi.decode to decode encoded data, allowing you to convert raw bytes back to structured data.
+
+// Decodes the data back into uint256 and address
+function decodeData(bytes memory data) public pure returns (uint256, address) {
+    return abi.decode(data, (uint256, address));
+}
+
+// Function to decode the encoded data back to its original types
+function decodeData(bytes memory data) public pure returns (uint256, address) {
+    // Decodes data into (uint256, address)
+    return abi.decode(data, (uint256, address));
+}
+
+
+
+
+
