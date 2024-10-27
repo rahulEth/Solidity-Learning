@@ -1,0 +1,77 @@
+when you need more control on EVM or seek to optimize gas fee.
+
+1. Gas Optimization: if some operations consuming more gas on , low level operation in 
+assembly can same gas costs,
+Example : mlord (read 32 bytes from memory location), mstore(writes 32 bytes to specifed location), 
+addmod(computes addition modulo in gas-efficient way , avoding potential overflow)
+
+pragma solidity ^0.8.0;
+
+contract MloadExample {
+    function loadData(bytes memory data) public pure returns (bytes32 result) {
+        // Use `mload` to load the first 32 bytes of the input data
+        assembly {
+            result := mload(add(data, 32))  // Reads 32 bytes from data's memory location
+        }
+    }
+}
+
+Explanation: mload is used here to read the first 32 bytes of data. 
+The add(data, 32) skips the initial 32 bytes, which hold the data's 
+length in Solidity, allowing access to the actual data in data.
+
+pragma solidity ^0.8.0;
+
+contract MstoreExample {
+    function storeData(uint256 num) public pure returns (bytes memory) {
+        bytes memory data = new bytes(32);  // Initialize 32 bytes of memory
+
+        assembly {
+            mstore(add(data, 32), num)  // Store `num` in the allocated memory
+        }
+        return data;
+    }
+}
+
+mstore here places num into the memory slot allocated for data. 
+By adding 32 to data, we skip the length prefix (the first 32 bytes 
+in dynamic memory). The function then returns the memory with the stored
+num as a 32-byte value.
+
+pragma solidity ^0.8.0;
+
+contract AddmodExample {
+    function addWithMod(uint256 x, uint256 y, uint256 k) public pure returns (uint256) {
+        uint256 result;
+        assembly {
+            result := addmod(x, y, k)  // Performs (x + y) % k
+        }
+        return result;
+    }
+}
+
+Explanation: The addmod operation is used here to return (x + y) % k efficiently. 
+This approach avoids overflow issues as addmod computes the result using modular 
+arithmetic, keeping values within a safe range.
+
+
+
+2. for some opcodes , solidity exquivelent not available 
+like selfdestruct , extcodehash 
+
+function checkContract(address addr) public view returns (bytes32) {
+    bytes32 codeHash;
+    assembly {
+        codeHash := extcodehash(addr)  // Get the code hash of the address
+    }
+    return codeHash;
+}
+
+
+3. Efficient Looping: like modififing states in bulk can be more efficet in assembly
+
+
+4. . Implementing Complex Mathematical Functions, String and Byte Manipulation
+
+
+
